@@ -1,0 +1,6 @@
+venv/
+*.gz
+*.kv
+*.npy
+__pycache__/
+.DS_Store
