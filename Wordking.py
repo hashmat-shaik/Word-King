@@ -7,11 +7,9 @@ from prompt_toolkit.shortcuts import PromptSession
 from gensim.models import KeyedVectors
 
 
-model_path = '/Users/hashmatshaik/Documents/GameDev/Word_King/Word-King/word2vec-google-news-300.gz'
-cached_model_path = '/Users/hashmatshaik/Documents/GameDev/Word_King/Word-King/word2vec-google-news-300.kv'
-word_file_path = '/Users/hashmatshaik/Documents/GameDev/Word_King/Word-King/word_list_5000.txt'
-
-# Hi, I'm Hashmat Shaik
+model_path = './word2vec-google-news-300.gz'
+cached_model_path = './word2vec-google-news-300.kv'
+word_file_path = './word_list_5000.txt'
 
 player_scores = {}
 sanitized_vocab = {}
@@ -23,7 +21,7 @@ def score_cal(model, target_word, guess):
   guess_sim = model.similarity(sanitized_vocab[target_word], sanitized_vocab[guess])
   return calculate_score(guess_sim)
 
-def calculate_score(sim, threshold=0.3):
+def calculate_score(sim):
   k = 10
   mean = 0.35
   return round((100/(1 + math.exp(-1*k*(sim - mean)))))
@@ -69,7 +67,7 @@ for original_key in model.index_to_key:
     # 3. Normalize to lowercase for player input
     clean_guess = original_key.lower()
     
-    # 4. Handle Case Collisions (The Critical Thinking Step)
+    # 4. Handling Case Collisions
     if clean_guess not in sanitized_vocab:
         sanitized_vocab[clean_guess] = original_key
 
@@ -86,9 +84,6 @@ async def timer_task(target_word, hints_done):
     
     try:
       while unrevealed_indices:
-          
-        # Yield control back to the main loop for a set interval
-        # (This allows the user to keep typing guesses)
         await asyncio.sleep(15) 
         
         idx = random.choice(unrevealed_indices)
@@ -143,6 +138,5 @@ async def game_loop():
                 
     timer.cancel()
 
-# Execute the asynchronous program
 if __name__ == "__main__":
     asyncio.run(game_loop())
