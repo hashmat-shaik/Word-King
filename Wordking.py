@@ -56,18 +56,12 @@ else:
 
 for original_key in model.index_to_key:
     
-    # 1. Reject n-grams (underscores)
     if '_' in original_key:
         continue
-        
-    # 2. Reject numbers, symbols, and punctuation
     if not original_key.isalpha():
         continue
-        
-    # 3. Normalize to lowercase for player input
     clean_guess = original_key.lower()
-    
-    # 4. Handling Case Collisions
+
     if clean_guess not in sanitized_vocab:
         sanitized_vocab[clean_guess] = original_key
 
